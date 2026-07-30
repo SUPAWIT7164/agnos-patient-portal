@@ -4,6 +4,7 @@ import {
   Alert,
   Button,
   ConnectionBadge,
+  IconTrash,
   PatientDetailsSkeleton,
 } from "@/components/ui";
 import { usePatientStore } from "@/hooks/usePatientStore";
@@ -29,14 +30,17 @@ export function StaffDashboard() {
   const isConnecting = connectionStatus === "connecting" && isEmpty;
 
   return (
-    <div className="space-y-5">
-      <div className="flex flex-col gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-muted)]/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-wrap items-center gap-3">
+    <div className="space-y-5 sm:space-y-6">
+      <div className="ui-status-bar sm:flex-nowrap">
+        <div className="flex min-w-0 flex-wrap items-center gap-3">
           <ConnectionBadge status={connectionStatus} />
           <PatientStatusBadge status={activityStatus} />
           <p className="text-sm text-[var(--color-text-muted)]">
             Last updated:{" "}
-            <span className="font-medium text-[var(--color-text)]">
+            <span
+              key={updatedAt ?? "none"}
+              className="inline-block font-medium text-[var(--color-text)] animate-fade-in"
+            >
               {formatDateTime(updatedAt)}
             </span>
           </p>
@@ -49,6 +53,7 @@ export function StaffDashboard() {
             onClick={clearPatient}
             className="w-full sm:w-auto"
           >
+            <IconTrash className="h-4 w-4" />
             Clear patient data
           </Button>
         ) : null}
@@ -57,7 +62,7 @@ export function StaffDashboard() {
       {connectionStatus === "disconnected" ? (
         <Alert variant="error" title="Connection lost">
           WebSocket disconnected. Start the socket server with{" "}
-          <code className="rounded bg-white/70 px-1.5 py-0.5 text-xs">
+          <code className="rounded-[var(--radius-icon)] bg-[var(--color-surface)]/80 px-1.5 py-0.5 text-xs">
             npm run dev
           </code>{" "}
           and keep this tab open — it will reconnect automatically.
@@ -69,7 +74,9 @@ export function StaffDashboard() {
       ) : isEmpty ? (
         <EmptyPatientState />
       ) : (
-        <PatientDetails patient={patient!} />
+        <div className="animate-fade-in-up">
+          <PatientDetails patient={patient!} />
+        </div>
       )}
     </div>
   );

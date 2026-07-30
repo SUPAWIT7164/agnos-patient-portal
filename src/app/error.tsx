@@ -14,7 +14,7 @@ export default function GlobalError({ error, reset }: ErrorPageProps) {
   }, [error]);
 
   return (
-    <div className="mx-auto max-w-lg py-10">
+    <div className="mx-auto w-full max-w-lg py-10">
       <Card padding="lg">
         <Alert variant="error" title="Something went wrong">
           An unexpected error occurred while rendering this page.

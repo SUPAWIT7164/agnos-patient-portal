@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function StaffPage() {
   return (
-    <div className="mx-auto max-w-4xl">
+    <div className="mx-auto w-full max-w-4xl">
       <Card padding="lg">
         <CardHeader
           title="Staff View"

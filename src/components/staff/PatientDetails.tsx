@@ -1,5 +1,10 @@
 import type { PatientDraft } from "@/types";
-import { SectionCard } from "@/components/ui";
+import {
+  IconHeart,
+  IconPhone,
+  IconUser,
+  SectionCard,
+} from "@/components/ui";
 import {
   formatDateOfBirth,
   formatGender,
@@ -17,21 +22,22 @@ interface PatientDetailsProps {
  */
 export function PatientDetails({ patient }: PatientDetailsProps) {
   return (
-    <div className="space-y-4 sm:space-y-5">
-      <div className="rounded-xl border border-[var(--color-primary)]/20 bg-[var(--color-primary-light)] px-4 py-4 sm:px-5">
-        <p className="text-xs font-semibold uppercase tracking-wider text-[var(--color-primary)]">
-          Current patient
-        </p>
-        <p className="mt-1 text-xl font-semibold tracking-tight text-[var(--color-secondary)]">
+    <div className="space-y-5 sm:space-y-6">
+      <div className="rounded-[var(--radius-panel)] border border-[var(--color-primary)]/20 bg-gradient-to-r from-[var(--color-primary-light)] to-[var(--color-surface)] px-4 py-4 shadow-[var(--shadow-xs)] sm:px-5 sm:py-5">
+        <p className="ui-eyebrow">Current patient</p>
+        <p
+          key={getPatientFullName(patient)}
+          className="mt-1.5 text-xl font-semibold tracking-tight text-[var(--color-secondary)] animate-fade-in-up sm:text-2xl"
+        >
           {getPatientFullName(patient)}
         </p>
       </div>
 
       <SectionCard
         title="Personal Information"
-        className="bg-[var(--color-surface-muted)]/40"
+        icon={<IconUser className="h-4 w-4" />}
       >
-        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <DetailField
             label="First Name"
             value={formatOptional(patient.firstName)}
@@ -58,9 +64,9 @@ export function PatientDetails({ patient }: PatientDetailsProps) {
 
       <SectionCard
         title="Contact Details"
-        className="bg-[var(--color-surface-muted)]/40"
+        icon={<IconPhone className="h-4 w-4" />}
       >
-        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <DetailField
             label="Phone Number"
             value={formatOptional(patient.phoneNumber)}
@@ -76,9 +82,9 @@ export function PatientDetails({ patient }: PatientDetailsProps) {
 
       <SectionCard
         title="Preferences & Emergency"
-        className="bg-[var(--color-surface-muted)]/40"
+        icon={<IconHeart className="h-4 w-4" />}
       >
-        <dl className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <DetailField
             label="Preferred Language"
             value={formatOptional(patient.preferredLanguage)}

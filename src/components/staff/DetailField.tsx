@@ -21,17 +21,17 @@ export function DetailField({
   return (
     <div
       className={cn(
-        "rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] px-4 py-3 shadow-sm",
+        "rounded-[var(--radius-panel)] border border-[var(--color-border)]/80 bg-[var(--color-surface)] px-4 py-3.5",
+        "transition-colors duration-200 ease-[var(--ease-out)] hover:border-[var(--color-border-strong)]",
         fullWidth && "sm:col-span-2",
         className,
       )}
     >
-      <dt className="text-xs font-semibold uppercase tracking-wide text-[var(--color-text-muted)]">
-        {label}
-      </dt>
+      <dt className="ui-label-caps">{label}</dt>
       <dd
+        key={value}
         className={cn(
-          "mt-1.5 break-words text-sm font-medium sm:text-base",
+          "mt-1.5 break-words text-sm font-medium animate-fade-in-up",
           isEmpty
             ? "italic text-[var(--color-text-muted)]"
             : "text-[var(--color-text)]",

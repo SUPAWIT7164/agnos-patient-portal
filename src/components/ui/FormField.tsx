@@ -28,7 +28,10 @@ export function FormField({
       </Label>
       {children}
       {hint && !error ? (
-        <p id={`${id}-hint`} className="mt-1.5 text-xs text-[var(--color-text-muted)]">
+        <p
+          id={`${id}-hint`}
+          className="mt-1.5 text-xs leading-relaxed text-[var(--color-text-muted)]"
+        >
           {hint}
         </p>
       ) : null}
@@ -36,7 +39,7 @@ export function FormField({
         <p
           id={`${id}-error`}
           role="alert"
-          className="mt-1.5 text-xs text-[var(--color-error)]"
+          className="mt-1.5 animate-fade-in-up rounded-[var(--radius-icon)] bg-[var(--color-error-bg)] px-2.5 py-1.5 text-xs font-medium text-[var(--color-error)]"
         >
           {error}
         </p>

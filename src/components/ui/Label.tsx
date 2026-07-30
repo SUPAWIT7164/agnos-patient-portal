@@ -15,7 +15,7 @@ export function Label({
   return (
     <label
       className={cn(
-        "mb-1.5 block text-sm font-medium text-[var(--color-text)]",
+        "mb-2 block text-[length:var(--text-body-sm)] font-medium leading-none text-[var(--color-text)]",
         className,
       )}
       {...props}
@@ -26,7 +26,7 @@ export function Label({
           *
         </span>
       ) : (
-        <span className="ml-1 text-xs font-normal text-[var(--color-text-muted)]">
+        <span className="ml-1.5 text-xs font-normal text-[var(--color-text-muted)]">
           (optional)
         </span>
       )}

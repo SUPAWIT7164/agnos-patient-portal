@@ -14,7 +14,7 @@ const statusConfig: Record<
     description: "Patient is currently entering information",
     className:
       "border border-[var(--color-info)]/25 bg-[var(--color-info-bg)] text-[var(--color-info)]",
-    dotClassName: "bg-[var(--color-info)] animate-pulse",
+    dotClassName: "bg-[var(--color-info)] animate-pulse-soft",
   },
   inactive: {
     label: "Inactive",
@@ -48,16 +48,17 @@ export function PatientStatusBadge({ status }: PatientStatusBadgeProps) {
   return (
     <div
       className={cn(
-        "inline-flex flex-col gap-0.5 rounded-xl px-3 py-2",
+        "inline-flex flex-col gap-0.5 rounded-[var(--radius-panel)] px-3.5 py-2.5 shadow-[var(--shadow-xs)]",
+        "transition-colors duration-200",
         config.className,
       )}
       title={config.description}
     >
-      <span className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide">
-        <span className={cn("h-1.5 w-1.5 rounded-full", config.dotClassName)} />
+      <span className="inline-flex items-center gap-1.5 text-[length:var(--text-label)] font-semibold uppercase tracking-[var(--tracking-label)]">
+        <span className={cn("h-2 w-2 rounded-full", config.dotClassName)} />
         {config.label}
       </span>
-      <span className="text-[11px] font-medium opacity-80 sm:text-xs">
+      <span className="text-[length:var(--text-label)] font-medium opacity-80 sm:text-xs">
         {config.description}
       </span>
     </div>

@@ -288,7 +288,7 @@ Staff View (instant UI update, no polling)
 
 - **GitHub repository:** https://github.com/SUPAWIT7164/agnos-patient-portal
 - **Live application (Netlify):** _pending_
-- **Socket server (Render):** _pending_
+- **Socket server (Render):** https://agnos-patient-portal.onrender.com
 
 ---
 

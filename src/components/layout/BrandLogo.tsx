@@ -20,17 +20,17 @@ export function BrandLogo({
   showWordmark = false,
 }: BrandLogoProps) {
   const content = (
-    <span className={cn("inline-flex items-center gap-2.5", className)}>
+    <span className={cn("inline-flex items-center gap-3", className)}>
       <Image
         src="/agnos.jpg"
         alt={APP_NAME}
         width={140}
         height={56}
         priority={priority}
-        className="h-9 w-auto object-contain sm:h-10"
+        className="h-8 w-auto object-contain sm:h-9"
       />
       {showWordmark ? (
-        <span className="hidden text-sm font-semibold tracking-tight text-[var(--color-secondary)] lg:inline">
+        <span className="hidden border-l border-[var(--color-border)] pl-3 text-sm font-semibold tracking-tight text-[var(--color-secondary)] lg:inline">
           Patient Portal
         </span>
       ) : null}
@@ -42,7 +42,7 @@ export function BrandLogo({
   return (
     <Link
       href={href}
-      className="min-w-0 transition-opacity hover:opacity-80"
+      className="min-w-0 rounded-[var(--radius-control)] transition-opacity duration-200 hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary)] focus-visible:ring-offset-2"
       aria-label={APP_NAME}
     >
       {content}

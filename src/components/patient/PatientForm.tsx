@@ -28,6 +28,12 @@ import {
   Button,
   ConnectionBadge,
   FormField,
+  IconHeart,
+  IconPhone,
+  IconReset,
+  IconSave,
+  IconUser,
+  IconWifi,
   Input,
   SectionCard,
   Select,
@@ -151,17 +157,27 @@ export function PatientForm() {
       className="space-y-5 sm:space-y-6"
       aria-labelledby="patient-form-title"
     >
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-muted)]/80 px-4 py-3">
-        <p className="text-sm text-[var(--color-text-muted)]">
-          Live sync enabled · updates broadcast every 300ms while typing
-        </p>
+      <div className="ui-status-bar">
+        <div className="flex min-w-0 items-start gap-2.5">
+          <span className="ui-icon-well mt-0.5 bg-[var(--color-surface)] shadow-[var(--shadow-xs)]">
+            <IconWifi className="h-4 w-4" />
+          </span>
+          <div className="min-w-0">
+            <p className="text-sm font-medium text-[var(--color-secondary)]">
+              Live sync enabled
+            </p>
+            <p className="mt-0.5 text-xs text-[var(--color-text-muted)]">
+              Updates broadcast every 300ms while typing
+            </p>
+          </div>
+        </div>
         <ConnectionBadge status={connectionStatus} />
       </div>
 
       {connectionStatus === "disconnected" ? (
         <Alert variant="error" title="WebSocket offline">
           Run{" "}
-          <code className="rounded bg-white/70 px-1.5 py-0.5 text-xs">
+          <code className="rounded-[var(--radius-icon)] bg-[var(--color-surface)]/80 px-1.5 py-0.5 text-xs">
             npm run dev
           </code>{" "}
           so the Next.js app and socket server start together.
@@ -174,7 +190,7 @@ export function PatientForm() {
         </Alert>
       ) : null}
 
-      <SectionCard title="Personal Information">
+      <SectionCard title="Personal Information" icon={<IconUser className="h-4 w-4" />}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           <FormField
             id="firstName"
@@ -289,7 +305,7 @@ export function PatientForm() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Contact Details">
+      <SectionCard title="Contact Details" icon={<IconPhone className="h-4 w-4" />}>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormField
             id="phoneNumber"
@@ -347,7 +363,10 @@ export function PatientForm() {
         </div>
       </SectionCard>
 
-      <SectionCard title="Preferences & Emergency">
+      <SectionCard
+        title="Preferences & Emergency"
+        icon={<IconHeart className="h-4 w-4" />}
+      >
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <FormField
             id="preferredLanguage"
@@ -434,7 +453,7 @@ export function PatientForm() {
         </Alert>
       ) : null}
 
-      <div className="flex flex-col-reverse gap-3 border-t border-[var(--color-border)] pt-5 sm:flex-row sm:justify-end">
+      <div className="flex flex-col-reverse gap-3 border-t border-[var(--color-border)] pt-6 sm:flex-row sm:justify-end">
         <Button
           type="button"
           variant="secondary"
@@ -442,13 +461,15 @@ export function PatientForm() {
           disabled={isSubmitting || !isDirty}
           className="w-full sm:w-auto"
         >
+          <IconReset className="h-4 w-4" />
           Reset
         </Button>
         <Button
           type="submit"
           isLoading={isSubmitting}
-          className="w-full sm:w-auto"
+          className="w-full sm:w-auto sm:min-w-[10.5rem]"
         >
+          <IconSave className="h-4 w-4" />
           Save Patient
         </Button>
       </div>

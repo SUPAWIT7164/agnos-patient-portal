@@ -10,30 +10,9 @@ const EMPTY_SNAPSHOT: PatientStoreSnapshot = {
   activityStatus: "idle",
 };
 
-function readSnapshot(): PatientStoreSnapshot {
-  if (typeof window === "undefined") return EMPTY_SNAPSHOT;
-
-  try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return EMPTY_SNAPSHOT;
-    const parsed = JSON.parse(raw) as Partial<PatientStoreSnapshot> & {
-      // migrate old Phase 3/4 payload that used emergencyContact
-      patient?: (PatientDraft & { emergencyContact?: string }) | null;
-    };
-
-    const patient = parsed.patient
-      ? migratePatient(parsed.patient)
-      : null;
-
-    return {
-      patient,
-      updatedAt: parsed.updatedAt ?? null,
-      activityStatus: parsed.activityStatus ?? (patient ? "editing" : "idle"),
-    };
-  } catch {
-    return EMPTY_SNAPSHOT;
-  }
-}
+/** Cached snapshot — must keep stable object identity for useSyncExternalStore. */
+let cachedSnapshot: PatientStoreSnapshot = EMPTY_SNAPSHOT;
+let hasHydratedFromStorage = false;
 
 function migratePatient(
   patient: PatientDraft & { emergencyContact?: string },
@@ -53,23 +32,77 @@ function migratePatient(
   };
 }
 
-function writeSnapshot(snapshot: PatientStoreSnapshot): void {
-  if (typeof window === "undefined") return;
+function snapshotsEqual(
+  a: PatientStoreSnapshot,
+  b: PatientStoreSnapshot,
+): boolean {
+  return (
+    a.updatedAt === b.updatedAt &&
+    a.activityStatus === b.activityStatus &&
+    JSON.stringify(a.patient) === JSON.stringify(b.patient)
+  );
+}
 
-  if (!snapshot.patient) {
-    window.localStorage.removeItem(STORAGE_KEY);
-  } else {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+function readFromStorage(): PatientStoreSnapshot {
+  if (typeof window === "undefined") return EMPTY_SNAPSHOT;
+
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return EMPTY_SNAPSHOT;
+
+    const parsed = JSON.parse(raw) as Partial<PatientStoreSnapshot> & {
+      patient?: (PatientDraft & { emergencyContact?: string }) | null;
+    };
+
+    const patient = parsed.patient ? migratePatient(parsed.patient) : null;
+
+    return {
+      patient,
+      updatedAt: parsed.updatedAt ?? null,
+      activityStatus: parsed.activityStatus ?? (patient ? "editing" : "idle"),
+    };
+  } catch {
+    return EMPTY_SNAPSHOT;
+  }
+}
+
+function hydrateCacheIfNeeded(): void {
+  if (hasHydratedFromStorage || typeof window === "undefined") return;
+  cachedSnapshot = readFromStorage();
+  hasHydratedFromStorage = true;
+}
+
+function commitSnapshot(next: PatientStoreSnapshot): PatientStoreSnapshot {
+  if (snapshotsEqual(cachedSnapshot, next)) {
+    return cachedSnapshot;
   }
 
-  window.dispatchEvent(new Event("agnos:patient-updated"));
+  cachedSnapshot = next;
+
+  if (typeof window !== "undefined") {
+    if (!next.patient) {
+      window.localStorage.removeItem(STORAGE_KEY);
+    } else {
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+    }
+    window.dispatchEvent(new Event("agnos:patient-updated"));
+  }
+
+  return cachedSnapshot;
 }
 
 /**
  * Local cache + cross-tab sync. Live multi-client updates go through Socket.IO.
  */
 export const patientLocalStore = {
-  getSnapshot: readSnapshot,
+  /**
+   * Must return a cached object. Creating a new object every call causes
+   * useSyncExternalStore infinite loops.
+   */
+  getSnapshot(): PatientStoreSnapshot {
+    hydrateCacheIfNeeded();
+    return cachedSnapshot;
+  },
 
   getServerSnapshot(): PatientStoreSnapshot {
     return EMPTY_SNAPSHOT;
@@ -78,7 +111,13 @@ export const patientLocalStore = {
   subscribe(onStoreChange: () => void) {
     const handleUpdate = () => onStoreChange();
     const handleStorage = (event: StorageEvent) => {
-      if (event.key === STORAGE_KEY) onStoreChange();
+      if (event.key !== STORAGE_KEY) return;
+      const next = readFromStorage();
+      if (!snapshotsEqual(cachedSnapshot, next)) {
+        cachedSnapshot = next;
+        hasHydratedFromStorage = true;
+        onStoreChange();
+      }
     };
 
     window.addEventListener("agnos:patient-updated", handleUpdate);
@@ -94,7 +133,7 @@ export const patientLocalStore = {
    * Applies a payload locally without emitting to the socket (avoids echo loops).
    */
   applyRemote(payload: PatientUpdatePayload): void {
-    writeSnapshot({
+    commitSnapshot({
       patient: payload.patient ? migratePatient(payload.patient) : null,
       updatedAt: payload.updatedAt,
       activityStatus: payload.activityStatus ?? "idle",
@@ -105,13 +144,11 @@ export const patientLocalStore = {
     patient: PatientDraft | null,
     activityStatus: PatientUpdatePayload["activityStatus"] = "editing",
   ): PatientUpdatePayload {
-    const payload: PatientUpdatePayload = {
+    return commitSnapshot({
       patient,
       updatedAt: new Date().toISOString(),
       activityStatus: patient ? activityStatus : "idle",
-    };
-    writeSnapshot(payload);
-    return payload;
+    });
   },
 
   clear(): PatientUpdatePayload {

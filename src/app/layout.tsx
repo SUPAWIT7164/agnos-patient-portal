@@ -21,6 +21,11 @@ export const metadata: Metadata = {
     template: `%s | ${APP_NAME}`,
   },
   description: APP_DESCRIPTION,
+  icons: {
+    icon: [{ url: "/agnos.jpg", type: "image/jpeg" }],
+    apple: [{ url: "/agnos.jpg", type: "image/jpeg" }],
+    shortcut: "/agnos.jpg",
+  },
 };
 
 export default function RootLayout({
