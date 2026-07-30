@@ -1,0 +1,38 @@
+{
+  "name": "agnos-patient-portal",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -k -n web,socket -c cyan,magenta \"next dev\" \"node server/index.mjs\"",
+    "dev:web": "next dev",
+    "dev:socket": "node server/index.mjs",
+    "build": "next build",
+    "start": "concurrently -k -n web,socket -c cyan,magenta \"next start\" \"node server/index.mjs\"",
+    "start:web": "next start",
+    "start:socket": "node server/index.mjs",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.5.7",
+    "clsx": "^2.1.1",
+    "next": "16.2.12",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-hook-form": "^7.83.0",
+    "socket.io": "^4.8.3",
+    "socket.io-client": "^4.8.3",
+    "tailwind-merge": "^3.6.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "concurrently": "^10.0.4",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.12",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

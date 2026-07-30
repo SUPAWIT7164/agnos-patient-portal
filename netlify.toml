@@ -1,0 +1,16 @@
+[build]
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+# Next.js is auto-detected on Netlify (OpenNext adapter).
+# After deploying the Socket.IO server, set this env var in Netlify UI:
+#   NEXT_PUBLIC_WS_URL = https://YOUR-SOCKET-SERVER.onrender.com
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

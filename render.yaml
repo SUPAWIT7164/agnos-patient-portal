@@ -1,0 +1,18 @@
+# Render Blueprint — Socket.IO server for Agnos Patient Portal
+# Dashboard: New → Blueprint → connect this repo
+services:
+  - type: web
+    name: agnos-patient-portal-socket
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm install --omit=dev
+    startCommand: npm run start:socket
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: CLIENT_ORIGIN
+        # Set after Netlify deploy, e.g.:
+        # http://localhost:3000,https://your-site.netlify.app
+        value: http://localhost:3000

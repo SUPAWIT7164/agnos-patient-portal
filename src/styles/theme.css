@@ -1,0 +1,35 @@
+/**
+ * Agnos brand theme — derived from agnos.jpg logo blues.
+ * Primary: corporate blue | Accent: soft sky blue shadow layer
+ */
+:root {
+  --color-primary: #1a5dcb;
+  --color-primary-hover: #1448a3;
+  --color-primary-light: #eaf1fc;
+  --color-secondary: #0f2f6b;
+  --color-accent: #92b9f0;
+  --color-accent-soft: #c5daf8;
+  --color-surface: #ffffff;
+  --color-surface-muted: #f4f7fc;
+  --color-surface-elevated: #ffffff;
+  --color-border: #d7e3f4;
+  --color-border-strong: #b7c9e6;
+  --color-text: #12233f;
+  --color-text-muted: #5a6d88;
+  --color-error: #c81e1e;
+  --color-error-bg: #fef2f2;
+  --color-success: #15803d;
+  --color-success-bg: #f0fdf4;
+  --color-warning: #b45309;
+  --color-warning-bg: #fffbeb;
+  --color-info: #1a5dcb;
+  --color-info-bg: #eaf1fc;
+  --shadow-card: 0 1px 2px rgb(15 47 107 / 0.04), 0 4px 14px rgb(26 93 203 / 0.06);
+  --shadow-card-hover: 0 2px 6px rgb(15 47 107 / 0.06), 0 10px 24px rgb(26 93 203 / 0.1);
+  --radius-card: 1rem;
+  --radius-control: 0.625rem;
+  --dashboard-bg:
+    radial-gradient(1100px 420px at 8% -12%, rgb(26 93 203 / 0.12), transparent 55%),
+    radial-gradient(900px 380px at 95% 0%, rgb(146 185 240 / 0.28), transparent 50%),
+    var(--color-surface-muted);
+}
